@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OralScan — AI-Powered Oral Cancer Screening</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg:        #0d1117;
+    --bg2:       #161b22;
+    --white:     #1e2530;
+    --ink:       #e6edf3;
+    --ink2:      #cdd9e5;
+    --ink3:      #8b949e;
+    --rule:      #2a3240;
+    --teal:      #2dd4bf;
+    --teal-lt:   #0d2b29;
+    --teal-md:   #164e4a;
+    --amber:     #f59e0b;
+    --amber-lt:  #1f1a0e;
+    --red:       #f87171;
+    --red-lt:    #1f0f0f;
+    --green:     #4ade80;
+    --green-lt:  #0f1f14;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--rule);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand { display: flex; align-items: center; gap: 10px; }
+
+  .brand-mark { width: 32px; height: 32px; }
+
+  .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: var(--ink);
+  }
+
+  .brand-name span { color: var(--teal); }
+
+  .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+
+  .nav-links a {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink3);
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--teal); }
+
+  .nav-cta {
+    background: var(--teal) !important;
+    color: #0d1117 !important;
+    padding: 8px 20px;
+    border-radius: 6px;
+  }
+
+  .nav-cta:hover { background: #22a99f !important; }
+
+  /* HERO */
+  .hero {
+    background: var(--white);
+    border-bottom: 1px solid var(--rule);
+    padding: 80px 32px 72px;
+    text-align: center;
+    animation: fadeIn 0.6s ease both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 20px;
+  }
+
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--teal-md);
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 5vw, 60px);
+    font-weight: 300;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    max-width: 640px;
+    margin: 0 auto 20px;
+  }
+
+  .hero h1 em { font-style: italic; color: var(--teal); }
+
+  .hero-sub {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--ink3);
+    max-width: 480px;
+    margin: 0 auto 32px;
+    line-height: 1.75;
+  }
+
+  .hero-notice {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--amber-lt);
+    border: 1px solid #fcd34d;
+    color: var(--amber);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 4px;
+  }
+
+  /* PAGE BODY */
+  .page-body {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 56px 32px 80px;
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .section-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--teal);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .section-rule { flex: 1; height: 1px; background: var(--rule); }
+
+  .section-title { font-size: 18px; font-weight: 600; color: var(--ink); letter-spacing: -0.2px; }
+
+  /* INSTRUCTIONS */
+  .instructions {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 0;
+    margin-bottom: 40px;
+    overflow: hidden;
+    animation: fadeIn 0.6s 0.1s ease both;
+  }
+
+  .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+
+  .step-item {
+    padding: 28px 22px;
+    border-right: 1px solid var(--rule);
+    transition: background 0.2s;
+  }
+
+  .step-item:last-child { border-right: none; }
+  .step-item:hover { background: var(--teal-lt); }
+
+  .step-index {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    font-weight: 300;
+    color: var(--teal-md);
+    line-height: 1;
+    margin-bottom: 14px;
+  }
+
+  .step-icon-wrap {
+    width: 36px;
+    height: 36px;
+    background: var(--bg2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    transition: background 0.2s;
+  }
+
+  .step-item:hover .step-icon-wrap { background: var(--teal-md); }
+  .step-icon-wrap svg { color: var(--teal); }
+
+  .step-item h3 { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .step-item p  { font-size: 12px; color: var(--ink3); line-height: 1.55; font-weight: 300; }
+
+  /* UPLOAD */
+  .upload-section { margin-bottom: 40px; animation: fadeIn 0.6s 0.2s ease both; }
+
+  .upload-zone {
+    background: var(--white);
+    border: 1.5px dashed var(--rule);
+    border-radius: 12px;
+    padding: 60px 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.25s, background 0.25s;
+  }
+
+  .upload-zone:hover, .upload-zone.dragover {
+    border-color: var(--teal);
+    background: var(--teal-lt);
+  }
+
+  .upload-icon-ring {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--bg2);
+    border: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .upload-zone:hover .upload-icon-ring { background: var(--teal-md); border-color: var(--teal); }
+  .upload-icon-ring svg { color: var(--ink3); transition: color 0.2s; }
+  .upload-zone:hover .upload-icon-ring svg { color: var(--teal); }
+
+  .upload-zone h3  { font-size: 16px; font-weight: 500; margin-bottom: 6px; }
+  .upload-zone > p { font-size: 13px; color: var(--ink3); font-weight: 300; margin-bottom: 24px; }
+
+  .btn-primary {
+    display: inline-block;
+    background: var(--teal);
+    color: #0d1117;
+    border: none;
+    border-radius: 6px;
+    padding: 11px 28px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .btn-primary:hover    { background: #22a99f; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  #fileInput { display: none; }
+
+  /* Preview */
+  .preview-wrap {
+    display: none;
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 16px;
+  }
+
+  .preview-wrap.visible { display: block; }
+
+  .preview-inner {
+    padding: 20px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .preview-thumb {
+    width: 140px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--rule);
+    flex-shrink: 0;
+  }
+
+  .preview-info { flex: 1; padding-top: 4px; }
+  .preview-info h4 { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .preview-info p  { font-size: 12px; color: var(--ink3); margin-bottom: 16px; }
+  .preview-actions { display: flex; gap: 10px; align-items: center; }
+
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 9px 18px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Outfit', sans-serif;
+    color: var(--ink3);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-secondary:hover { border-color: var(--ink3); color: var(--ink); }
+
+  /* LOADING */
+  .loading-panel {
+    display: none;
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 52px 32px;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .loading-panel.visible { display: block; }
+
+  .loading-panel h3 { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+  .loading-panel p  { font-size: 13px; color: var(--ink3); font-weight: 300; }
+
+  .loading-bar-track {
+    width: 200px;
+    height: 2px;
+    background: var(--rule);
+    border-radius: 2px;
+    margin: 20px auto 0;
+    overflow: hidden;
+  }
+
+  .loading-bar-fill {
+    height: 100%;
+    width: 40%;
+    background: var(--teal);
+    border-radius: 2px;
+    animation: slide 1.2s ease-in-out infinite;
+  }
+
+  @keyframes slide {
+    0%   { transform: translateX(-150%); }
+    100% { transform: translateX(500%); }
+  }
+
+  /* RESULT */
+  .result-panel { display: none; margin-bottom: 40px; animation: fadeIn 0.5s ease both; }
+  .result-panel.visible { display: block; }
+
+  .result-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .result-top {
+    padding: 28px 32px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .risk-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .risk-pill .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+  .risk-pill.normal    { background: var(--green-lt); color: var(--green); }
+  .risk-pill.normal .dot { background: var(--green); }
+
+  .risk-pill.suspicious { background: var(--amber-lt); color: var(--amber); }
+  .risk-pill.suspicious .dot { background: var(--amber); }
+
+  .risk-pill.highrisk  { background: var(--red-lt); color: var(--red); }
+  .risk-pill.highrisk .dot { background: var(--red); }
+
+  .result-top-text h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 400;
+    letter-spacing: -0.3px;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .result-top-text p { font-size: 13px; color: var(--ink3); font-weight: 300; }
+
+  .conf-block { margin-left: auto; text-align: right; }
+
+  .conf-block .conf-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .conf-block .conf-lbl {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink3);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-top: 2px;
+  }
+
+  .result-body { padding: 28px 32px; }
+
+  .images-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .img-card { border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
+
+  .img-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .img-card-label {
+    padding: 10px 14px;
+    border-top: 1px solid var(--rule);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--ink3);
+    background: var(--bg);
+  }
+
+  .recommendation-block {
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .rec-header {
+    padding: 11px 16px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--rule);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--ink3);
+  }
+
+  .rec-body {
+    padding: 16px;
+    font-size: 14px;
+    color: var(--ink2);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .disclaimer-strip {
+    background: var(--amber-lt);
+    border: 1px solid #fcd34d;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 12px;
+    color: var(--amber);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .disclaimer-strip strong { font-weight: 600; }
+
+  .result-actions { display: flex; gap: 12px; }
+
+  /* ERROR */
+  .error-strip {
+    display: none;
+    background: var(--red-lt);
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--red);
+    margin-bottom: 24px;
+  }
+
+  .error-strip.visible { display: block; }
+
+  /* FOOTER */
+  footer {
+    background: var(--white);
+    border-top: 1px solid var(--rule);
+    padding: 32px;
+  }
+
+  .footer-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 600; }
+  .footer-brand span { color: var(--teal); }
+  .footer-copy { font-size: 12px; color: var(--ink3); font-weight: 300; margin-top: 4px; }
+
+  .footer-note {
+    font-size: 11px;
+    color: var(--ink3);
+    font-weight: 300;
+    text-align: right;
+    max-width: 360px;
+    line-height: 1.6;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 700px) {
+    .steps-grid { grid-template-columns: 1fr 1fr; }
+    .step-item  { border-right: none; border-bottom: 1px solid var(--rule); }
+    .images-row { grid-template-columns: 1fr; }
+    .result-top { flex-wrap: wrap; }
+    .conf-block { margin-left: 0; text-align: left; }
+    .nav-links  { display: none; }
+    .preview-inner { flex-direction: column; }
+    .preview-thumb { width: 100%; height: 180px; }
+    .hero { padding: 48px 24px 40px; }
+    .page-body { padding: 40px 20px 60px; }
+    .footer-note { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="32" height="32" rx="8" fill="#2dd4bf"/>
+        <path d="M8 16c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="#0d2b29" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M10 19c1.5 3 6.5 5 12 0" stroke="#0d1117" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="13" cy="16" r="1.5" fill="#0d1117"/>
+        <circle cx="19" cy="16" r="1.5" fill="#0d1117"/>
+      </svg>
+      <span class="brand-name">Oral<span>Scan</span></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#screening">Screening Tool</a></li>
+      <li><a href="#screening" class="nav-cta">Start Screening</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">AI-Assisted Oral Health Screening</div>
+  <h1>Detect oral lesions <em>early,</em><br/>from your phone.</h1>
+  <p class="hero-sub">Upload a photograph of the inside of your mouth. Our AI model analyses it for signs of potentially malignant lesions and advises whether you should seek specialist care.</p>
+  <div class="hero-notice">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    Preliminary screening aid only — not a medical diagnosis
+  </div>
+</section>
+
+<!-- BODY -->
+<div class="page-body">
+
+  <!-- 01: Instructions -->
+  <section id="how-it-works" style="margin-bottom:40px; animation: fadeIn 0.6s 0.05s ease both;">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <div class="section-rule"></div>
+      <h2 class="section-title">How to photograph your mouth</h2>
+    </div>
+
+    <div class="instructions">
+      <div class="steps-grid">
+        <div class="step-item">
+          <div class="step-index">01</div>
+          <div class="step-icon-wrap">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </div>
+          <h3>Enable the torch</h3>
+          <p>Turn on your phone flashlight before opening the camera. The oral cavity is dark and requires additional lighting for a clear image.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-index">02</div>
+          <div class="step-icon-wrap">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <h3>Use a mirror</h3>
+          <p>Stand in front of a bathroom mirror and use the reflection to aim your phone camera accurately at the inner cheek or tongue.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-index">03</div>
+          <div class="step-icon-wrap">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Open wide</h3>
+          <p>Open your mouth as wide as comfortable. Focus on any abnormal area — white patches, red spots, or persistent ulcers.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-index">04</div>
+          <div class="step-icon-wrap">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+          <h3>Capture clearly</h3>
+          <p>Hold your phone steady and photograph the area. Ensure the region of concern is in focus and well-illuminated.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02: Upload -->
+  <section id="screening" class="upload-section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <div class="section-rule"></div>
+      <h2 class="section-title">Upload your photograph</h2>
+    </div>
+
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon-ring">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <h3>Drag and drop your image here</h3>
+      <p>Supported formats: JPG, PNG &nbsp;&middot;&nbsp; Visible areas only — inner cheek, tongue, lips</p>
+      <button class="btn-primary" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">Select Image</button>
+      <input type="file" id="fileInput" accept="image/*"/>
+    </div>
+
+    <div class="preview-wrap" id="previewWrap">
+      <div class="preview-inner">
+        <img id="previewImg" src="" alt="Preview" class="preview-thumb"/>
+        <div class="preview-info">
+          <h4 id="previewName">Selected image</h4>
+          <p id="previewMeta">Ready for analysis</p>
+          <div class="preview-actions">
+            <button class="btn-primary" id="analyzeBtn" onclick="analyzeImage()">Run Analysis</button>
+            <button class="btn-secondary" onclick="resetTool()">Remove</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ERROR -->
+  <div class="error-strip" id="errorStrip"></div>
+
+  <!-- LOADING -->
+  <div class="loading-panel" id="loadingPanel">
+    <h3>Analysing your image</h3>
+    <p>Running the classification model and generating the attention map</p>
+    <div class="loading-bar-track"><div class="loading-bar-fill"></div></div>
+  </div>
+
+  <!-- 03: Result -->
+  <div class="result-panel" id="resultPanel">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <div class="section-rule"></div>
+      <h2 class="section-title">Screening result</h2>
+    </div>
+
+    <div class="result-card">
+      <div class="result-top">
+        <div>
+          <div class="risk-pill" id="riskPill">
+            <span class="dot"></span>
+            <span id="riskPillText">—</span>
+          </div>
+        </div>
+        <div class="result-top-text">
+          <h2 id="riskHeading">—</h2>
+          <p id="riskSubtext">—</p>
+        </div>
+        <div class="conf-block">
+          <div class="conf-val" id="confVal">—</div>
+          <div class="conf-lbl">Confidence</div>
+        </div>
+      </div>
+
+      <div class="result-body">
+        <div class="images-row">
+          <div class="img-card">
+            <img id="resultOriginal" src="" alt="Original photograph"/>
+            <div class="img-card-label">Original Photograph</div>
+          </div>
+          <div class="img-card">
+            <img id="resultHeatmap" src="" alt="AI Attention Map"/>
+            <div class="img-card-label">AI Attention Map</div>
+          </div>
+        </div>
+
+        <div class="recommendation-block">
+          <div class="rec-header">Clinical Recommendation</div>
+          <div class="rec-body" id="recBody">—</div>
+        </div>
+
+        <div class="disclaimer-strip">
+          <strong>Important notice:</strong> This screening tool is intended as a preliminary aid to encourage timely dental consultation. It does not constitute a clinical diagnosis. Results may be affected by image quality, lighting, or camera angle. Please consult a qualified dentist or oral specialist for a thorough examination.
+        </div>
+
+        <div class="result-actions">
+          <button class="btn-primary" onclick="resetTool()">Screen another image</button>
+          <button class="btn-secondary" onclick="window.print()">Print results</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-body -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Oral<span>Scan</span></div>
+      <div class="footer-copy">A student research project in AI-assisted oral health screening.</div>
+    </div>
+    <div class="footer-note">
+      This tool screens for visible oral lesions only and cannot detect lesions in areas not captured in the photograph. It is not a substitute for a professional clinical oral examination.
+    </div>
+  </div>
+</footer>
+
+<script>
+  const uploadZone   = document.getElementById('uploadZone');
+  const fileInput    = document.getElementById('fileInput');
+  const previewWrap  = document.getElementById('previewWrap');
+  const previewImg   = document.getElementById('previewImg');
+  const previewName  = document.getElementById('previewName');
+  const previewMeta  = document.getElementById('previewMeta');
+  const analyzeBtn   = document.getElementById('analyzeBtn');
+  const loadingPanel = document.getElementById('loadingPanel');
+  const resultPanel  = document.getElementById('resultPanel');
+  const errorStrip   = document.getElementById('errorStrip');
+
+  let selectedFile = null;
+
+  const RISK_CONFIG = {
+    'Normal':    { cls: 'normal',    heading: 'No Significant Findings',       sub: 'No obvious lesions detected in the photographed area.' },
+    'Suspicious':{ cls: 'suspicious',heading: 'Potentially Suspicious',        sub: 'Unusual patterns detected — professional evaluation recommended.' },
+    'High Risk': { cls: 'highrisk',  heading: 'Further Evaluation Required',   sub: 'Concerning features detected — please seek specialist consultation promptly.' }
+  };
+
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    const f = e.dataTransfer.files[0];
+    if (f && f.type.startsWith('image/')) handleFile(f);
+  });
+
+  fileInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+
+  function handleFile(file) {
+    selectedFile = file;
+    const reader = new FileReader();
+    reader.onload = e => {
+      previewImg.src = e.target.result;
+      previewName.textContent = file.name;
+      previewMeta.textContent = (file.size / 1024).toFixed(0) + ' KB  ·  Ready for analysis';
+      previewWrap.classList.add('visible');
+      uploadZone.style.display = 'none';
+      hideError();
+      resultPanel.classList.remove('visible');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function analyzeImage() {
+    if (!selectedFile) return;
+    analyzeBtn.disabled = true;
+    loadingPanel.classList.add('visible');
+    resultPanel.classList.remove('visible');
+    hideError();
+
+    const formData = new FormData();
+    formData.append('image', selectedFile);
+
+    try {
+      const res = await fetch('/predict', { method: 'POST', body: formData });
+      if (!res.ok) throw new Error('Server error. Please try again.');
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      showResult(data);
+    } catch (err) {
+      showError(err.message || 'An error occurred. Please try again.');
+    } finally {
+      loadingPanel.classList.remove('visible');
+      analyzeBtn.disabled = false;
+    }
+  }
+
+  function showResult(data) {
+    const cfg = RISK_CONFIG[data.risk_level] || RISK_CONFIG['Suspicious'];
+
+    const pill = document.getElementById('riskPill');
+    pill.className = 'risk-pill ' + cfg.cls;
+    document.getElementById('riskPillText').textContent = data.risk_level;
+    document.getElementById('riskHeading').textContent  = cfg.heading;
+    document.getElementById('riskSubtext').textContent  = cfg.sub;
+    document.getElementById('confVal').textContent      = data.confidence + '%';
+    document.getElementById('recBody').textContent      = data.message;
+    document.getElementById('resultOriginal').src       = previewImg.src;
+    document.getElementById('resultHeatmap').src        = data.heatmap
+      ? 'data:image/png;base64,' + data.heatmap
+      : previewImg.src;
+
+    resultPanel.classList.add('visible');
+    resultPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function showError(msg) { errorStrip.textContent = msg; errorStrip.classList.add('visible'); }
+  function hideError()    { errorStrip.classList.remove('visible'); }
+
+  function resetTool() {
+    selectedFile = null;
+    fileInput.value = '';
+    previewImg.src = '';
+    previewWrap.classList.remove('visible');
+    uploadZone.style.display = '';
+    resultPanel.classList.remove('visible');
+    loadingPanel.classList.remove('visible');
+    hideError();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
